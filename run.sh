@@ -17,8 +17,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-./rotate.sh
-
 # 負荷試験 & 採点開始
 if [[ $HOSTNAME != app-* ]]; then
     (cd benchmarker && bash ./run_k6_and_score.sh)
