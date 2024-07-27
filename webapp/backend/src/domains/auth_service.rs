@@ -1,5 +1,5 @@
 use std::path::{Path, PathBuf};
-use std::process::Command;
+// use std::process::Command;
 
 use actix_web::web::Bytes;
 use log::error;
@@ -9,6 +9,8 @@ use crate::models::user::{Dispatcher, Session, User};
 use crate::utils::{generate_session_token, hash_password, verify_password};
 
 use super::dto::auth::LoginResponseDto;
+use opentelemetry_auto_span::auto_span;
+
 
 pub trait AuthRepository {
     async fn create_user(&self, username: &str, password: &str, role: &str)
@@ -103,6 +105,8 @@ impl<T: AuthRepository + std::fmt::Debug> AuthService<T> {
         }
     }
 
+
+    #[auto_span(all_await)]
     pub async fn login_user(
         &self,
         username: &str,
@@ -153,6 +157,7 @@ impl<T: AuthRepository + std::fmt::Debug> AuthService<T> {
         Ok(())
     }
 
+    #[auto_span]
     pub async fn get_resized_profile_image_byte(&self, user_id: i32) -> Result<Bytes, AppError> {
         let profile_image_name = match self
             .repository
@@ -187,6 +192,7 @@ impl<T: AuthRepository + std::fmt::Debug> AuthService<T> {
         Ok(Bytes::from(buf))
     }
 
+    #[auto_span]
     pub async fn validate_session(&self, session_token: &str) -> Result<bool, AppError> {
         let session = self
             .repository

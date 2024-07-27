@@ -8,6 +8,7 @@ use crate::{
 };
 use actix_web::{web, HttpResponse};
 use serde::Deserialize;
+use opentelemetry_auto_span::auto_span;
 
 #[derive(Deserialize, Debug)]
 pub struct PaginatedTowTruckQuery {
@@ -17,6 +18,7 @@ pub struct PaginatedTowTruckQuery {
     area: Option<i32>,
 }
 
+#[auto_span]
 pub async fn get_paginated_tow_trucks_handler(
     service: web::Data<
         TowTruckService<TowTruckRepositoryImpl, OrderRepositoryImpl, MapRepositoryImpl>,
@@ -35,6 +37,7 @@ pub async fn get_paginated_tow_trucks_handler(
     Ok(HttpResponse::Ok().json(tow_trucks))
 }
 
+#[auto_span]
 pub async fn get_tow_truck_handler(
     service: web::Data<
         TowTruckService<TowTruckRepositoryImpl, OrderRepositoryImpl, MapRepositoryImpl>,
@@ -49,6 +52,7 @@ pub async fn get_tow_truck_handler(
     }
 }
 
+#[auto_span]
 pub async fn update_location_handler(
     service: web::Data<
         TowTruckService<TowTruckRepositoryImpl, OrderRepositoryImpl, MapRepositoryImpl>,
@@ -66,6 +70,7 @@ pub struct TowTruckQuery {
     order_id: i32,
 }
 
+#[auto_span]
 pub async fn get_nearest_available_tow_trucks_handler(
     service: web::Data<
         TowTruckService<TowTruckRepositoryImpl, OrderRepositoryImpl, MapRepositoryImpl>,

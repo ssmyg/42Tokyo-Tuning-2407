@@ -10,6 +10,9 @@ use crate::repositories::tow_truck_repository::TowTruckRepositoryImpl;
 use actix_web::{web, HttpResponse};
 use serde::Deserialize;
 
+use opentelemetry_auto_span::auto_span;
+
+#[auto_span]
 pub async fn update_order_status_handler(
     service: web::Data<
         OrderService<
@@ -27,6 +30,7 @@ pub async fn update_order_status_handler(
     }
 }
 
+#[auto_span]
 pub async fn get_order_handler(
     service: web::Data<
         OrderService<
@@ -54,6 +58,7 @@ pub struct PaginatedOrderQuery {
     area: Option<i32>,
 }
 
+#[auto_span]
 pub async fn get_paginated_orders_handler(
     service: web::Data<
         OrderService<
@@ -81,6 +86,7 @@ pub async fn get_paginated_orders_handler(
     }
 }
 
+#[auto_span]
 pub async fn create_client_order_handler(
     service: web::Data<
         OrderService<
@@ -101,6 +107,7 @@ pub async fn create_client_order_handler(
     }
 }
 
+#[auto_span]
 pub async fn create_dispatcher_order_handler(
     service: web::Data<
         OrderService<

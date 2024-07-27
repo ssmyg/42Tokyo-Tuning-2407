@@ -3,7 +3,9 @@ use crate::domains::dto::auth::{LoginRequestDto, LogoutRequestDto, RegisterReque
 use crate::errors::AppError;
 use crate::repositories::auth_repository::AuthRepositoryImpl;
 use actix_web::{web, HttpResponse};
+use opentelemetry_auto_span::auto_span;
 
+#[auto_span]
 pub async fn register_handler(
     service: web::Data<AuthService<AuthRepositoryImpl>>,
     req: web::Json<RegisterRequestDto>,
@@ -17,6 +19,7 @@ pub async fn register_handler(
     }
 }
 
+#[auto_span]
 pub async fn login_handler(
     service: web::Data<AuthService<AuthRepositoryImpl>>,
     req: web::Json<LoginRequestDto>,
@@ -27,6 +30,7 @@ pub async fn login_handler(
     }
 }
 
+#[auto_span]
 pub async fn logout_handler(
     service: web::Data<AuthService<AuthRepositoryImpl>>,
     req: web::Json<LogoutRequestDto>,
@@ -37,6 +41,7 @@ pub async fn logout_handler(
     }
 }
 
+#[auto_span]
 pub async fn user_profile_image_handler(
     service: web::Data<AuthService<AuthRepositoryImpl>>,
     path: web::Path<i32>,

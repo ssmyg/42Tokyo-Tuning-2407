@@ -9,6 +9,8 @@ use rand::Rng;
 
 use crate::errors::AppError;
 
+use opentelemetry_auto_span::auto_span;
+
 // pub fn generate_session_token() -> String {
 //     let mut rng = rand::thread_rng();
 //     let token: String = (0..30)
@@ -22,6 +24,7 @@ use crate::errors::AppError;
 // }
 
 /// セッショントークンを生成する関数
+#[auto_span]
 pub fn generate_session_token() -> String {
     // 32バイトのランダムなデータを生成
     let random_bytes: Vec<u8> = rand::thread_rng()
@@ -33,6 +36,7 @@ pub fn generate_session_token() -> String {
     encode(random_bytes)
 }
 
+#[auto_span]
 pub fn hash_password(password: &str) -> Result<String, AppError> {
     let password_bytes = password.as_bytes();
     let salt = SaltString::generate(&mut OsRng);
@@ -47,6 +51,7 @@ pub fn hash_password(password: &str) -> Result<String, AppError> {
     }
 }
 
+#[auto_span]
 pub fn verify_password(hashed_password: &str, input_password: &str) -> Result<bool, AppError> {
     let input_password_bytes = input_password.as_bytes();
     let parsed_hash = match PasswordHash::new(hashed_password) {

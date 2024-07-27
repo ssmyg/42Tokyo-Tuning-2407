@@ -5,6 +5,8 @@ use crate::errors::AppError;
 use crate::models::graph::Graph;
 use crate::models::tow_truck::TowTruck;
 
+use opentelemetry_auto_span::auto_span;
+
 pub trait TowTruckRepository {
     async fn get_paginated_tow_trucks(
         &self,
@@ -48,6 +50,7 @@ impl<
         Ok(tow_truck.map(TowTruckDto::from_entity))
     }
 
+    #[auto_span]
     pub async fn get_all_tow_trucks(
         &self,
         page: i32,
@@ -67,6 +70,7 @@ impl<
         Ok(tow_truck_dtos)
     }
 
+    #[auto_span]
     pub async fn update_location(&self, truck_id: i32, node_id: i32) -> Result<(), AppError> {
         self.tow_truck_repository
             .update_location(truck_id, node_id)
@@ -75,6 +79,7 @@ impl<
         Ok(())
     }
 
+    #[auto_span]
     pub async fn get_nearest_available_tow_trucks(
         &self,
         order_id: i32,
@@ -127,6 +132,7 @@ impl<
     }
 }
 
+    #[auto_span]
 fn calculate_distance(graph: &Graph, node_id_1: i32, node_id_2: i32) -> i32 {
     graph.shortest_path(node_id_1, node_id_2)
 }

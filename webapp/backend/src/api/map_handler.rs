@@ -4,7 +4,9 @@ use crate::{
     repositories::map_repository::MapRepositoryImpl,
 };
 use actix_web::{web, HttpResponse};
+use opentelemetry_auto_span::auto_span;
 
+#[auto_span]
 pub async fn update_edge_handler(
     service: web::Data<MapService<MapRepositoryImpl>>,
     req: web::Json<UpdateEdgeRequestDto>,
