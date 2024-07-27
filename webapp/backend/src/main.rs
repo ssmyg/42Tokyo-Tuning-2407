@@ -176,7 +176,7 @@ async fn main() -> std::io::Result<()> {
             )
     })
     .bind(format!("0.0.0.0:{port}"))?
-    .workers(4)
+    .workers(6)
     .run()
     .await
 }
