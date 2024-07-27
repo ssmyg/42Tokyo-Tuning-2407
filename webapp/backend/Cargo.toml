@@ -12,13 +12,27 @@ sqlx = { version = "0.5", features = ["mysql", "runtime-actix-rustls", "chrono"]
 dotenv = "0.15"
 rand = "0.8"
 thiserror = "1.0"
-env_logger = "0.10.0"
 actix-cors = "0.7.0"
 chrono = { version = "0.4.38", features = ["serde"] }
 argon2 = "0.5.3"
 futures-util = "0.3.30"
-log = "0.4.22"
 actix-files = "0.6.6"
+# original app from DreamArts
+log = "0.4.22"
+env_logger = "0.10.0"
+# practice for Metrics
+#log = "0.4"
+#env_logger = "0.9"
+
+# Datadog Metrics
+# dogstatSD
+#metrics = "0.13"
+#metrics-exporter-dogstatsd = "0.7"
+# Generic Metrics
+#metrics = "0.17"
+#metrics-exporter-statsd = "0.8"
+# Asynchronous tasks
+tokio = { version = "1", features = ["full"] }
 
 [build-dependencies]
 syn = "1"
