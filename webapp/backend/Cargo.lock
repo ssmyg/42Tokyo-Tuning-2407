@@ -343,6 +343,7 @@ dependencies = [
  "actix-rt",
  "actix-web",
  "argon2",
+ "base64 0.13.1",
  "chrono",
  "dotenv",
  "env_logger",
