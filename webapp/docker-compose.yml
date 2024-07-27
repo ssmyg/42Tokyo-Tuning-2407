@@ -28,7 +28,7 @@ services:
       timeout: 10s
       retries: 10
       start_period: 600s
-    entrypoint: [ "sh", "-c", "perf record -- ./backend" ]
+    entrypoint: [ "sh", "-c", "./backend" ]
 
   frontend:
     container_name: frontend

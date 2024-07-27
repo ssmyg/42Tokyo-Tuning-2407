@@ -3,7 +3,7 @@ FROM rust:1.77.2-alpine AS base
 
 WORKDIR /usr/src/backend
 
-RUN apk add --no-cache musl-dev libgcc openssl-dev curl imagemagick bash linux-tools
+RUN apk add --no-cache musl-dev libgcc openssl-dev curl imagemagick bash
 
 # sccacheのインストール
 RUN ARCH=$(uname -m) && \
