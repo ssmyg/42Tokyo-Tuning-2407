@@ -3,6 +3,8 @@ use crate::models::user::{Dispatcher, User};
 use crate::{domains::auth_service::AuthRepository, models::user::Session};
 use sqlx::mysql::MySqlPool;
 
+use opentelemetry_auto_span::auto_span;
+
 #[derive(Debug)]
 pub struct AuthRepositoryImpl {
     pool: MySqlPool,
@@ -15,6 +17,7 @@ impl AuthRepositoryImpl {
 }
 
 impl AuthRepository for AuthRepositoryImpl {
+    #[auto_span]
     async fn find_user_by_id(&self, id: i32) -> Result<Option<User>, AppError> {
         let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
             .bind(id)
@@ -24,6 +27,7 @@ impl AuthRepository for AuthRepositoryImpl {
         Ok(user)
     }
 
+    #[auto_span]
     async fn find_user_by_username(&self, username: &str) -> Result<Option<User>, AppError> {
         let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE username = ?")
             .bind(username)
@@ -33,6 +37,7 @@ impl AuthRepository for AuthRepositoryImpl {
         Ok(user)
     }
 
+    #[auto_span]
     async fn find_profile_image_name_by_user_id(
         &self,
         user_id: i32,
@@ -45,6 +50,7 @@ impl AuthRepository for AuthRepositoryImpl {
         Ok(profile_image_name)
     }
 
+    #[auto_span]
     async fn authenticate_user(&self, username: &str, password: &str) -> Result<User, AppError> {
         let user =
             sqlx::query_as::<_, User>("SELECT * FROM users WHERE username = ? AND password = ?")
@@ -56,6 +62,7 @@ impl AuthRepository for AuthRepositoryImpl {
         Ok(user)
     }
 
+    #[auto_span]
     async fn create_user(
         &self,
         username: &str,
@@ -72,6 +79,7 @@ impl AuthRepository for AuthRepositoryImpl {
         Ok(())
     }
 
+    #[auto_span]
     async fn create_session(&self, user_id: i32, session_token: &str) -> Result<(), AppError> {
         sqlx::query("INSERT INTO sessions (user_id, session_token) VALUES (?, ?)")
             .bind(user_id)
@@ -82,6 +90,7 @@ impl AuthRepository for AuthRepositoryImpl {
         Ok(())
     }
 
+    #[auto_span]
     async fn delete_session(&self, session_token: &str) -> Result<(), AppError> {
         sqlx::query("DELETE FROM sessions WHERE session_token = ?")
             .bind(session_token)
@@ -91,6 +100,7 @@ impl AuthRepository for AuthRepositoryImpl {
         Ok(())
     }
 
+    #[auto_span]
     async fn find_session_by_session_token(
         &self,
         session_token: &str,
@@ -104,6 +114,7 @@ impl AuthRepository for AuthRepositoryImpl {
         Ok(session)
     }
 
+    #[auto_span]
     async fn find_dispatcher_by_id(&self, id: i32) -> Result<Option<Dispatcher>, AppError> {
         let dispatcher = sqlx::query_as::<_, Dispatcher>("SELECT * FROM dispatchers WHERE id = ?")
             .bind(id)
@@ -113,6 +124,7 @@ impl AuthRepository for AuthRepositoryImpl {
         Ok(dispatcher)
     }
 
+    #[auto_span]
     async fn find_dispatcher_by_user_id(
         &self,
         user_id: i32,
@@ -126,6 +138,7 @@ impl AuthRepository for AuthRepositoryImpl {
         Ok(dispatcher)
     }
 
+    #[auto_span]
     async fn create_dispatcher(&self, user_id: i32, area_id: i32) -> Result<(), AppError> {
         sqlx::query("INSERT INTO dispatchers (user_id, area_id) VALUES (?, ?)")
             .bind(user_id)

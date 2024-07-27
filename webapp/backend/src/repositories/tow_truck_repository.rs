@@ -3,6 +3,8 @@ use crate::errors::AppError;
 use crate::models::tow_truck::TowTruck;
 use sqlx::mysql::MySqlPool;
 
+use opentelemetry_auto_span::auto_span;
+
 #[derive(Debug)]
 pub struct TowTruckRepositoryImpl {
     pool: MySqlPool,
@@ -15,6 +17,7 @@ impl TowTruckRepositoryImpl {
 }
 
 impl TowTruckRepository for TowTruckRepositoryImpl {
+    #[auto_span]
     async fn get_paginated_tow_trucks(
         &self,
         page: i32,
@@ -80,6 +83,7 @@ impl TowTruckRepository for TowTruckRepositoryImpl {
         Ok(tow_trucks)
     }
 
+    #[auto_span]
     async fn update_location(&self, tow_truck_id: i32, node_id: i32) -> Result<(), AppError> {
         sqlx::query("INSERT INTO locations (tow_truck_id, node_id) VALUES (?, ?)")
             .bind(tow_truck_id)
@@ -89,6 +93,7 @@ impl TowTruckRepository for TowTruckRepositoryImpl {
         Ok(())
     }
 
+    #[auto_span]
     async fn update_status(&self, tow_truck_id: i32, status: &str) -> Result<(), AppError> {
         sqlx::query("UPDATE tow_trucks SET status = ? WHERE id = ?")
             .bind(status)
@@ -99,6 +104,7 @@ impl TowTruckRepository for TowTruckRepositoryImpl {
         Ok(())
     }
 
+    #[auto_span]
     async fn find_tow_truck_by_id(&self, id: i32) -> Result<Option<TowTruck>, AppError> {
         let tow_truck = sqlx::query_as::<_, TowTruck>(
             "SELECT
