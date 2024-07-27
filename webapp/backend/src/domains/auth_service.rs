@@ -167,27 +167,24 @@ impl<T: AuthRepository + std::fmt::Debug> AuthService<T> {
         let path: PathBuf =
             Path::new(&format!("images/user_profile/{}", profile_image_name)).to_path_buf();
 
-        let output = Command::new("magick")
-            .arg(&path)
-            .arg("-resize")
-            .arg("500x500")
-            .arg("png:-")
-            .output()
+        // image crateを使った画像リサイズ
+        let img = image::open(&path).map_err(|e| {
+            error!("画像ファイルの読み込みに失敗しました: {:?}", e);
+            AppError::InternalServerError
+        })?;
+
+        let resized_img = img.resize(500, 500, image::imageops::FilterType::Lanczos3);
+
+        // 画像をバイト配列に変換
+        let mut buf = Vec::new();
+        resized_img
+            .write_to(&mut buf, image::ImageOutputFormat::Png)
             .map_err(|e| {
-                error!("画像リサイズのコマンド実行に失敗しました: {:?}", e);
+                error!("画像ファイルの書き込みに失敗しました: {:?}", e);
                 AppError::InternalServerError
             })?;
 
-        match output.status.success() {
-            true => Ok(Bytes::from(output.stdout)),
-            false => {
-                error!(
-                    "画像リサイズのコマンド実行に失敗しました: {:?}",
-                    String::from_utf8_lossy(&output.stderr)
-                );
-                Err(AppError::InternalServerError)
-            }
-        }
+        Ok(Bytes::from(buf))
     }
 
     pub async fn validate_session(&self, session_token: &str) -> Result<bool, AppError> {
