@@ -15,6 +15,8 @@ use repositories::auth_repository::AuthRepositoryImpl;
 use repositories::map_repository::MapRepositoryImpl;
 use repositories::order_repository::OrderRepositoryImpl;
 use repositories::tow_truck_repository::TowTruckRepositoryImpl;
+// Add for Opentelemetry
+use opentelemetry_auto_span::auto_span;
 
 mod api;
 mod domains;
@@ -27,6 +29,28 @@ mod utils;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+	// Use Opentelemetry
+    use opentelemetry::KeyValue;
+    use opentelemetry_otlp::WithExportConfig;
+    use opentelemetry_sdk::{runtime, trace as sdktrace, Resource};
+    // init tracer: also see https://github.com/open-telemetry/opentelemetry-rust/tree/main/examples/tracing-jaeger
+    opentelemetry_otlp::new_pipeline()
+        .tracing()
+        .with_exporter(
+            opentelemetry_otlp::new_exporter()
+                .tonic()
+                //.with_endpoint("http://jaeger:4317"),
+                .with_endpoint("127.0.0.1:8125"),
+        )
+        .with_trace_config(
+            sdktrace::config().with_resource(Resource::new(vec![KeyValue::new(
+                "service.name",
+                "42tokyo-tuning-2407",
+            )])),
+        )
+        .install_batch(runtime::Tokio)
+        .expect("pipeline install error");
+
     let pool = infrastructure::db::create_pool().await;
     let mut port = 8080;
 
@@ -64,6 +88,7 @@ async fn main() -> std::io::Result<()> {
             .max_age(3600);
 
         App::new()
+			.wrap(actix_web_opentelemetry::RequestTracing::new())// Opentelemetry
             .app_data(tow_truck_service.clone())
             .app_data(auth_service.clone())
             .app_data(order_service.clone())

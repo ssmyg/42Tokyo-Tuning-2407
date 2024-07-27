@@ -24,15 +24,24 @@ env_logger = "0.10.0"
 #log = "0.4"
 #env_logger = "0.9"
 
-# Datadog Metrics
-# dogstatSD
+# Datadog
+# Asynchronous tasks
+#tokio = { version = "1", features = ["full"] }
+# DogStatSD
 #metrics = "0.13"
 #metrics-exporter-dogstatsd = "0.7"
-# Generic Metrics
+# StatSD
 #metrics = "0.17"
 #metrics-exporter-statsd = "0.8"
-# Asynchronous tasks
-tokio = { version = "1", features = ["full"] }
+# Opentelemetry ... from syagi
+opentelemetry-auto-span = "0.3"
+opentelemetry = { version = "0.20", default-features = false, features = ["trace", "rt-tokio-current-thread"] }
+opentelemetry_sdk = { version = "0.20", features = ["rt-tokio"] }
+opentelemetry-otlp = { version = "0.13", features = ["tonic"] }
+actix-web-opentelemetry = "0.15.0"
+# Opentelemetry ... from GPT
+#opentelemetry = { version = "0.16", features = ["trace", "rt-tokio"] }
+#opentelemetry-datadog = "0.8"
 
 [build-dependencies]
 syn = "1"
