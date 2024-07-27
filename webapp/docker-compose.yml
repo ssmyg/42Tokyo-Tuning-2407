@@ -113,6 +113,17 @@ services:
       backend:
         condition: service_healthy
 
+  jaeger:
+    platform: linux/x86_64
+    image: jaegertracing/all-in-one:latest
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    networks:
+      - webapp-network
+    ports:
+      - "4317:4317"
+      - "16686:16686"
+
 networks:
   webapp-network:
     external: true
