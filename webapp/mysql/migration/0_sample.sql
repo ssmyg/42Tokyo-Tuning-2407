@@ -11,3 +11,10 @@ ALTER TABLE sessions ADD INDEX session_token_idx (session_token);
 
 ALTER TABLE nodes ADD INDEX area_id_idx (area_id);
 
+ALTER TABLE edges ADD COLUMN area_id INT;
+UPDATE edges
+SET area_id = (
+    SELECT area_id
+    FROM nodes
+    WHERE nodes.id = edges.node_a_id
+);
