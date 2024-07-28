@@ -22,7 +22,7 @@ impl OrderRepositoryImpl {
 }
 
 impl OrderRepository for OrderRepositoryImpl {
-    #[auto_span]
+    
     async fn find_order_by_id(&self, id: i32) -> Result<Order, AppError> {
         let order = sqlx::query_as::<_, Order>(
             "SELECT 
@@ -39,7 +39,7 @@ impl OrderRepository for OrderRepositoryImpl {
         Ok(order)
     }
 
-    #[auto_span]
+    
     async fn update_order_status(&self, order_id: i32, status: &str) -> Result<(), AppError> {
         sqlx::query("UPDATE orders SET status = ? WHERE id = ?")
             .bind(status)
@@ -50,7 +50,7 @@ impl OrderRepository for OrderRepositoryImpl {
         Ok(())
     }
 
-    #[auto_span]
+    
     async fn get_paginated_orders(
         &self,
         page: i32,
@@ -167,7 +167,7 @@ impl OrderRepository for OrderRepositoryImpl {
         Ok(orders)
     }
 
-    #[auto_span]
+    
     async fn create_order(
         &self,
         client_id: i32,
@@ -184,7 +184,7 @@ impl OrderRepository for OrderRepositoryImpl {
         Ok(())
     }
 
-    #[auto_span]
+    
     async fn update_order_dispatched(
         &self,
         id: i32,
@@ -203,7 +203,7 @@ impl OrderRepository for OrderRepositoryImpl {
         Ok(())
     }
 
-    #[auto_span]
+    
     async fn create_completed_order(
         &self,
         order_id: i32,
@@ -220,7 +220,7 @@ impl OrderRepository for OrderRepositoryImpl {
         Ok(())
     }
 
-    #[auto_span]
+    
     async fn get_all_completed_orders(&self) -> Result<Vec<CompletedOrder>, AppError> {
         let orders = sqlx::query_as::<_, CompletedOrder>(
             "SELECT co.id, co.order_id, co.tow_truck_id, co.order_time, co.completed_time, o.car_value

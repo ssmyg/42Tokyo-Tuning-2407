@@ -106,7 +106,6 @@ impl<T: AuthRepository + std::fmt::Debug> AuthService<T> {
     }
 
 
-    #[auto_span(all_await)]
     pub async fn login_user(
         &self,
         username: &str,
@@ -157,7 +156,7 @@ impl<T: AuthRepository + std::fmt::Debug> AuthService<T> {
         Ok(())
     }
 
-    #[auto_span]
+    
     pub async fn get_resized_profile_image_byte(&self, user_id: i32) -> Result<Bytes, AppError> {
         let profile_image_name = match self
             .repository
@@ -192,7 +191,7 @@ impl<T: AuthRepository + std::fmt::Debug> AuthService<T> {
         Ok(Bytes::from(buf))
     }
 
-    #[auto_span]
+    
     pub async fn validate_session(&self, session_token: &str) -> Result<bool, AppError> {
         let session = self
             .repository

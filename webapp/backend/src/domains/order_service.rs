@@ -79,14 +79,14 @@ impl<
         }
     }
 
-    #[auto_span]
+    
     pub async fn update_order_status(&self, order_id: i32, status: &str) -> Result<(), AppError> {
         self.order_repository
             .update_order_status(order_id, status)
             .await
     }
 
-    #[auto_span]
+    
     pub async fn get_order_by_id(&self, id: i32) -> Result<OrderDto, AppError> {
         let order = self.order_repository.find_order_by_id(id).await?;
 
@@ -171,7 +171,7 @@ impl<
         })
     }
 
-    #[auto_span]
+    
     pub async fn get_paginated_orders(
         &self,
         page: i32,
@@ -273,7 +273,7 @@ impl<
         Ok(results)
     }
 
-    #[auto_span]
+    
     pub async fn create_client_order(
         &self,
         client_id: i32,
@@ -290,7 +290,7 @@ impl<
         }
     }
 
-    #[auto_span]
+    
     pub async fn create_dispatcher_order(
         &self,
         order_id: i32,
@@ -318,7 +318,7 @@ impl<
         Ok(())
     }
 
-    #[auto_span]
+    
     pub async fn get_completed_orders(&self) -> Result<Vec<CompletedOrderDto>, AppError> {
         let orders = self.order_repository.get_all_completed_orders().await?;
         let order_dtos = orders

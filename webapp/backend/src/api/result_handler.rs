@@ -9,7 +9,7 @@ use crate::{
 use actix_web::{web, HttpResponse};
 use opentelemetry_auto_span::auto_span;
 
-#[auto_span]
+
 pub async fn result_handler(
     service: web::Data<
         OrderService<

@@ -19,7 +19,7 @@ impl MapRepositoryImpl {
 }
 
 impl MapRepository for MapRepositoryImpl {
-    #[auto_span]
+    
     async fn get_all_nodes(&self, area_id: Option<i32>) -> Result<Vec<Node>, sqlx::Error> {
         let where_clause = match area_id {
             Some(_) => "WHERE area_id = ?",
@@ -54,7 +54,7 @@ impl MapRepository for MapRepositoryImpl {
         Ok(nodes)
     }
 
-    #[auto_span]
+    
     async fn get_all_edges(&self, area_id: Option<i32>) -> Result<Vec<Edge>, sqlx::Error> {
         let where_clause = match area_id {
             Some(_) => "WHERE e.area_id = ?",
@@ -89,7 +89,7 @@ impl MapRepository for MapRepositoryImpl {
         Ok(edges)
     }
 
-    #[auto_span]
+    
     async fn get_area_id_by_node_id(&self, node_id: i32) -> Result<i32, sqlx::Error> {
         let area_id = sqlx::query_scalar("SELECT area_id FROM nodes WHERE id = ?")
             .bind(node_id)
@@ -99,7 +99,7 @@ impl MapRepository for MapRepositoryImpl {
         Ok(area_id)
     }
 
-    #[auto_span]
+    
     async fn update_edge(
         &self,
         node_a_id: i32,
