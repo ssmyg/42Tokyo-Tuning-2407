@@ -7,4 +7,7 @@ ALTER TABLE edges ADD INDEX node_b_id_idx (node_b_id);
 ALTER TABLE tow_trucks ADD INDEX driver_id_idx (driver_id);
 ALTER TABLE locations ADD INDEX tow_truck_id_idx (tow_truck_id);
 
+ALTER TABLE sessions ADD INDEX session_token_idx (session_token);
+
+ALTER TABLE nodes ADD INDEX area_id_idx (area_id);
 
