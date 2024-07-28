@@ -197,29 +197,29 @@ impl<
             //     .unwrap()
             //     .username;
 
-            let dispatcher = match order.dispatcher_id {
-                Some(dispatcher_id) => self
-                    .auth_repository
-                    .find_dispatcher_by_id(dispatcher_id)
-                    .await
-                    .unwrap(),
-                None => None,
-            };
+            // let dispatcher = match order.dispatcher_id {
+            //     Some(dispatcher_id) => self
+            //         .auth_repository
+            //         .find_dispatcher_by_id(dispatcher_id)
+            //         .await
+            //         .unwrap(),
+            //     None => None,
+            // };
 
-            let (dispatcher_user_id, dispatcher_username) = match dispatcher {
-                Some(dispatcher) => (
-                    Some(dispatcher.user_id),
-                    Some(
-                        self.auth_repository
-                            .find_user_by_id(dispatcher.user_id)
-                            .await
-                            .unwrap()
-                            .unwrap()
-                            .username,
-                    ),
-                ),
-                None => (None, None),
-            };
+            // let (dispatcher_user_id, dispatcher_username) = match dispatcher {
+            //     Some(dispatcher) => (
+            //         Some(dispatcher.user_id),
+            //         Some(
+            //             self.auth_repository
+            //                 .find_user_by_id(dispatcher.user_id)
+            //                 .await
+            //                 .unwrap()
+            //                 .unwrap()
+            //                 .username,
+            //         ),
+            //     ),
+            //     None => (None, None),
+            // };
 
             let tow_truck = match order.tow_truck_id {
                 Some(tow_truck_id) => self
@@ -256,8 +256,8 @@ impl<
                 client_id: order.client_id,
                 client_username: order.client_username, //Some(client_username),
                 dispatcher_id: order.dispatcher_id,
-                dispatcher_user_id: dispatcher_user_id,
-                dispatcher_username: dispatcher_username,
+                dispatcher_user_id: order.dispatcher_user_id,
+                dispatcher_username: order.dispatcher_username,
                 tow_truck_id: order.tow_truck_id,
                 driver_user_id,
                 driver_username,

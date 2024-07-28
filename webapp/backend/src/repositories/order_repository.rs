@@ -94,15 +94,23 @@ impl OrderRepository for OrderRepositoryImpl {
                 o.car_value, 
                 o.order_time, 
                 o.completed_time,
-                (SELECT username FROM users WHERE id = o.client_id) AS client_username
-
-
+                (SELECT username FROM users WHERE id = o.client_id) AS client_username,
+                d.user_id AS dispatcher_user_id, 
+                du.username AS dispatcher_username
             FROM
                 orders o
             JOIN
                 nodes n
             ON 
                 o.node_id = n.id
+            LEFT OUTER JOIN
+                dispatchers d
+            ON
+                o.dispatcher_id = d.id
+            LEFT OUTER JOIN
+                users du
+            ON
+                d.user_id = du.id
             {} 
             {} 
             LIMIT ? 

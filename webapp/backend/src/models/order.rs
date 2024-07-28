@@ -27,8 +27,10 @@ pub struct Order2 {
     pub completed_time: Option<DateTime<Utc>>,
     pub client_username: Option<String>,
     // pub area_id: i32,
-    // pub dispatcher_user_id: Option<i32>,
-    // pub dispatcher_username: Option<String>,
+    pub dispatcher_user_id: Option<i32>,
+    pub dispatcher_username: Option<String>,
+    // pub driver_user_id: Option<i32>,
+    // pub driver_username: Option<String>,
 }
 // order_area_id
 // pub struct OrderDto {
