@@ -9,7 +9,7 @@ use super::{
 };
 use crate::{
     errors::AppError,
-    models::order::{CompletedOrder, Order},
+    models::order::{CompletedOrder, Order, Order2},
 };
 
 pub trait OrderRepository {
@@ -23,7 +23,7 @@ pub trait OrderRepository {
         sort_order: Option<String>,
         status: Option<String>,
         area: Option<i32>,
-    ) -> Result<Vec<Order>, AppError>;
+    ) -> Result<Vec<Order2>, AppError>;
     async fn create_order(
         &self,
         customer_id: i32,
@@ -189,13 +189,13 @@ impl<
         let mut results = Vec::new();
 
         for order in orders {
-            let client_username = self
-                .auth_repository
-                .find_user_by_id(order.client_id)
-                .await
-                .unwrap()
-                .unwrap()
-                .username;
+            // let client_username = self
+            //     .auth_repository
+            //     .find_user_by_id(order.client_id)
+            //     .await
+            //     .unwrap()
+            //     .unwrap()
+            //     .username;
 
             let dispatcher = match order.dispatcher_id {
                 Some(dispatcher_id) => self
@@ -254,10 +254,10 @@ impl<
             results.push(OrderDto {
                 id: order.id,
                 client_id: order.client_id,
-                client_username: Some(client_username),
+                client_username: order.client_username, //Some(client_username),
                 dispatcher_id: order.dispatcher_id,
-                dispatcher_user_id,
-                dispatcher_username,
+                dispatcher_user_id: dispatcher_user_id,
+                dispatcher_username: dispatcher_username,
                 tow_truck_id: order.tow_truck_id,
                 driver_user_id,
                 driver_username,

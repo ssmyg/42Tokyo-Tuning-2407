@@ -1,10 +1,13 @@
 use crate::domains::order_service::OrderRepository;
 use crate::errors::AppError;
-use crate::models::order::{CompletedOrder, Order};
+use crate::models::order::{CompletedOrder, Order, Order2};
 use chrono::{DateTime, Utc};
 use sqlx::mysql::MySqlPool;
 
 use opentelemetry_auto_span::auto_span;
+
+
+
 
 #[derive(Debug)]
 pub struct OrderRepositoryImpl {
@@ -56,7 +59,7 @@ impl OrderRepository for OrderRepositoryImpl {
         sort_order: Option<String>,
         status: Option<String>,
         area: Option<i32>,
-    ) -> Result<Vec<Order>, AppError> {
+    ) -> Result<Vec<Order2>, AppError> {
         let offset = page * page_size;
         let order_clause = format!(
             "ORDER BY {} {}",
@@ -90,7 +93,10 @@ impl OrderRepository for OrderRepositoryImpl {
                 o.node_id, 
                 o.car_value, 
                 o.order_time, 
-                o.completed_time
+                o.completed_time,
+                (SELECT username FROM users WHERE id = o.client_id) AS client_username
+
+
             FROM
                 orders o
             JOIN
@@ -103,10 +109,21 @@ impl OrderRepository for OrderRepositoryImpl {
             OFFSET ?",
             where_clause, order_clause
         );
+                // (SELECT area_id FROM nodes WHERE id = o.node_id) AS area_id,
+                // d.user_id AS dispatcher_user_id, 
+                // u.username AS dispatcher_username
+            // JOIN
+            //     dispatchers d
+            // ON
+            //     o.dispatcher_id = d.id
+            // JOIN
+            //     users u
+            // ON
+            //     d.user_id = u.id
 
         let orders = match (status, area) {
             (Some(status), Some(area)) => {
-                sqlx::query_as::<_, Order>(&sql)
+                sqlx::query_as::<_, Order2>(&sql)
                     .bind(status)
                     .bind(area)
                     .bind(page_size)
@@ -115,7 +132,7 @@ impl OrderRepository for OrderRepositoryImpl {
                     .await?
             }
             (None, Some(area)) => {
-                sqlx::query_as::<_, Order>(&sql)
+                sqlx::query_as::<_, Order2>(&sql)
                     .bind(area)
                     .bind(page_size)
                     .bind(offset)
@@ -123,7 +140,7 @@ impl OrderRepository for OrderRepositoryImpl {
                     .await?
             }
             (Some(status), None) => {
-                sqlx::query_as::<_, Order>(&sql)
+                sqlx::query_as::<_, Order2>(&sql)
                     .bind(status)
                     .bind(page_size)
                     .bind(offset)
@@ -131,7 +148,7 @@ impl OrderRepository for OrderRepositoryImpl {
                     .await?
             }
             _ => {
-                sqlx::query_as::<_, Order>(&sql)
+                sqlx::query_as::<_, Order2>(&sql)
                     .bind(page_size)
                     .bind(offset)
                     .fetch_all(&self.pool)
